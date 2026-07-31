@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <h1>🔥 Devils Will Rise</h1>
-            <p class="sub">The Strongest Battleground – Full Script</p>
+            <p class="sub">The Strongest Battleground – Script Hub</p>
             <p class="credit">Owner: <span>@UnknownGuy9876</span> | Channel: <span>@SGCodexs</span></p>
         </header>
 
@@ -22,34 +22,33 @@
 
         <div class="script-box">
             <div class="script-header">
-                <span>📜 script.lua</span>
-                <button id="copyBtn">📋 Copy</button>
+                <span>📜 Nhập script của mày vào đây</span>
+                <button id="downloadBtn">⬇️ Tạo file .lua</button>
             </div>
-            <pre id="scriptContent"><code>--[[
-    DEVILS WILL RISE – THE STRONGEST BATTLEGROUND HACK
-    Full Integration: UI + All Hack Modules
-    Owner: @UnknownGuy9876 | Channel: @SGCodexs
-]]
-
--- Paste toàn bộ script Lua vào đây
-print("Devils Will Rise – Đã sẵn sàng")</code></pre>
+            <textarea id="scriptInput" placeholder="Paste toàn bộ script Lua vào đây..."></textarea>
         </div>
 
         <div class="footer">
-            <p>⚡ Dùng lệnh <code>loadstring(game:HttpGet("https://ten-project.vercel.app/script.lua"))()</code></p>
+            <p>⚡ Sau khi tạo file, dùng lệnh <code>loadstring(game:HttpGet("https://ten-project.vercel.app/script.lua"))()</code></p>
             <p>© 2026 Devils Will Rise – Made with ☠️ by @SGCodexs</p>
         </div>
     </div>
 
     <script>
-        document.getElementById("copyBtn").addEventListener("click", function() {
-            const code = document.getElementById("scriptContent").innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = this;
-                btn.textContent = "✅ Copied!";
-                setTimeout(() => btn.textContent = "📋 Copy", 2000);
-            });
+        document.getElementById("downloadBtn").addEventListener("click", function() {
+            const content = document.getElementById("scriptInput").value;
+            if (content.trim() === "") {
+                alert("❗ Chưa có script nào được nhập.");
+                return;
+            }
+            const blob = new Blob([content], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "script.lua";
+            a.click();
+            URL.revokeObjectURL(url);
         });
     </script>
 </body>
-          </html>
+</html>
