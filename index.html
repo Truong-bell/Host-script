@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Devils Will Rise – Script Hub</title>
+    <title>Devils Will Rise – Script Host</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🔥 Devils Will Rise</h1>
-            <p class="sub">The Strongest Battleground – Script Hub</p>
+            <p class="sub">The Strongest Battleground – Script Host</p>
             <p class="credit">Owner: <span>@UnknownGuy9876</span> | Channel: <span>@SGCodexs</span></p>
         </header>
 
@@ -22,33 +22,93 @@
 
         <div class="script-box">
             <div class="script-header">
-                <span>📜 Nhập script của mày vào đây</span>
-                <button id="downloadBtn">⬇️ Tạo file .lua</button>
+                <span>📜 Paste script của mày vào đây</span>
+                <button id="saveBtn">💾 Lưu &amp; Tạo Link Raw</button>
             </div>
             <textarea id="scriptInput" placeholder="Paste toàn bộ script Lua vào đây..."></textarea>
         </div>
 
+        <div class="raw-section" id="rawSection">
+            <label>🔗 Link raw của script:</label>
+            <div class="raw-link">
+                <input type="text" id="rawLink" readonly />
+                <button id="copyRawBtn">📋 Copy</button>
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: #888;">
+                ⚡ Dùng lệnh: <code id="loadstringExample">loadstring(game:HttpGet("link"))()</code>
+            </p>
+        </div>
+
         <div class="footer">
-            <p>⚡ Sau khi tạo file, dùng lệnh <code>loadstring(game:HttpGet("https://ten-project.vercel.app/script.lua"))()</code></p>
             <p>© 2026 Devils Will Rise – Made with ☠️ by @SGCodexs</p>
         </div>
     </div>
 
     <script>
-        document.getElementById("downloadBtn").addEventListener("click", function() {
-            const content = document.getElementById("scriptInput").value;
-            if (content.trim() === "") {
-                alert("❗ Chưa có script nào được nhập.");
+        const scriptInput = document.getElementById('scriptInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const rawSection = document.getElementById('rawSection');
+        const rawLink = document.getElementById('rawLink');
+        const copyRawBtn = document.getElementById('copyRawBtn');
+        const loadstringExample = document.getElementById('loadstringExample');
+
+        function encodeScript(script) {
+            return btoa(unescape(encodeURIComponent(script)));
+        }
+
+        function decodeScript(encoded) {
+            try {
+                return decodeURIComponent(escape(atob(encoded)));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveScriptToURL(script) {
+            const encoded = encodeScript(script);
+            const url = window.location.origin + window.location.pathname + '#' + encoded;
+            history.pushState({}, '', url);
+            return url;
+        }
+
+        function loadScriptFromURL() {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const decoded = decodeScript(hash);
+                if (decoded) {
+                    scriptInput.value = decoded;
+                    showRawLink();
+                }
+            }
+        }
+
+        function showRawLink() {
+            const url = window.location.href;
+            rawLink.value = url;
+            loadstringExample.textContent = `loadstring(game:HttpGet("${url}"))()`;
+            rawSection.classList.add('active');
+        }
+
+        saveBtn.addEventListener('click', function() {
+            const script = scriptInput.value;
+            if (script.trim() === '') {
+                alert('❗ Chưa có script nào được nhập.');
                 return;
             }
-            const blob = new Blob([content], { type: "text/plain" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "script.lua";
-            a.click();
-            URL.revokeObjectURL(url);
+            const url = saveScriptToURL(script);
+            showRawLink();
         });
+
+        copyRawBtn.addEventListener('click', function() {
+            rawLink.select();
+            navigator.clipboard.writeText(rawLink.value).then(() => {
+                copyRawBtn.textContent = '✅ Copied!';
+                setTimeout(() => copyRawBtn.textContent = '📋 Copy', 2000);
+            });
+        });
+
+        loadScriptFromURL();
+        window.addEventListener('hashchange', loadScriptFromURL);
     </script>
 </body>
-</html>
+                </html>
